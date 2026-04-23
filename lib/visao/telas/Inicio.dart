@@ -31,7 +31,7 @@ class _TelaHomeState extends State<TelaUm> {
             }),
 
             _categoria(context, "Lanche", Icons.fastfood, () {
-              Navigator.push(context,
+              Navigator.push(context, //vou usar o push porque eu consigo voltar se quiser
                   MaterialPageRoute(builder: (_) => ReceitasLanche()));
             }),
 
