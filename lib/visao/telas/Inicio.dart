@@ -9,7 +9,7 @@ class TelaUm extends StatefulWidget {
   final String title;
 
   @override
-  State<TelaUm> createState() => _TelaHomeState();
+  State<TelaUm> createState() => _TelaHomeState(); //eu dei o nome de telaum, e estou usando para chamar nas outras paginas
 }
 
 class _TelaHomeState extends State<TelaUm> {
@@ -19,19 +19,19 @@ class _TelaHomeState extends State<TelaUm> {
     return Scaffold(
       body: Padding(
         padding: const EdgeInsets.all(16),
-        child: GridView.count(
+        child: GridView.count( //essa é uma grid que eu coloquei, para ficar dois por dois
           crossAxisCount: 2,
           crossAxisSpacing: 15,
           mainAxisSpacing: 15,
           children: [
 
-            _categoria(context, "Almoço", Icons.lunch_dining, () {
-              Navigator.push(context,
-                  MaterialPageRoute(builder: (_) => ReceitasAlmoco()));
+            _categoria(context, "Almoço", Icons.lunch_dining, () { //estou colocando um icone em todas as categorias, para ficar visualmente bonito
+              Navigator.push(context, //vou usar o push porque eu consigo voltar se quiser
+                  MaterialPageRoute(builder: (_) => ReceitasAlmoco())); //eu estou mudando de pagina, chamando o builder da receitas daquelas categorias
             }),
 
             _categoria(context, "Lanche", Icons.fastfood, () {
-              Navigator.push(context, //vou usar o push porque eu consigo voltar se quiser
+              Navigator.push(context,
                   MaterialPageRoute(builder: (_) => ReceitasLanche()));
             }),
 
@@ -51,7 +51,7 @@ class _TelaHomeState extends State<TelaUm> {
   }
 
   Widget _categoria(BuildContext context, String titulo, IconData icone, VoidCallback onTap) {
-    return GestureDetector(
+    return GestureDetector( //esse detector serve para detectar um toque na tela. Toda vez que for tocado ele percebera
       onTap: onTap,
       child: Container(
         decoration: BoxDecoration(

@@ -3,15 +3,9 @@ import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:login/visao/telas/Splash2.dart';
 import 'package:login/visao/telas/TelaRecuperacaoSenha.dart';
-import 'package:login/visao/telas/Principal.dart';
-
-bool _entrarActive = false;
-bool _cadastrarActive = true;
 
 TextEditingController _emailController = TextEditingController();
 TextEditingController _passwordController = TextEditingController();
-TextEditingController _newEmailController = TextEditingController();
-TextEditingController _newPasswordController = TextEditingController();
 
 class Login extends StatefulWidget {
   const Login({super.key, required this.title});
@@ -37,7 +31,7 @@ class _LoginState extends State<Login> {
     );
   }
 
-  // 🔐 LOGIN
+  // LOGIN
   Widget _showEntrar(context) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -47,7 +41,6 @@ class _LoginState extends State<Login> {
 
         TextField(
           controller: _emailController,
-          style: const TextStyle(color: Colors.black),
           decoration: InputDecoration(
             hintText: "Email",
             filled: true,
@@ -56,7 +49,7 @@ class _LoginState extends State<Login> {
               borderRadius: BorderRadius.circular(12),
               borderSide: BorderSide.none,
             ),
-            prefixIcon: const Icon(Icons.email, color: Colors.grey),
+            prefixIcon: const Icon(Icons.email),
           ),
         ),
 
@@ -65,7 +58,6 @@ class _LoginState extends State<Login> {
         TextField(
           controller: _passwordController,
           obscureText: true,
-          style: const TextStyle(color: Colors.black),
           decoration: InputDecoration(
             hintText: "Senha",
             filled: true,
@@ -74,7 +66,7 @@ class _LoginState extends State<Login> {
               borderRadius: BorderRadius.circular(12),
               borderSide: BorderSide.none,
             ),
-            prefixIcon: const Icon(Icons.lock, color: Colors.grey),
+            prefixIcon: const Icon(Icons.lock),
           ),
         ),
 
@@ -100,65 +92,8 @@ class _LoginState extends State<Login> {
           onPressed: () => telaRecuperacaoSenha(context),
           child: const Text(
             "Esqueci minha senha",
-            style: TextStyle(color: Colors.white70),
+            style: TextStyle(color: Colors.black),
           ),
-        ),
-      ],
-    );
-  }
-
-  // 📝 CADASTRO
-  Widget _showCadastrar() {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.stretch,
-      children: [
-
-        const SizedBox(height: 20),
-
-        TextField(
-          controller: _newEmailController,
-          style: const TextStyle(color: Colors.black),
-          decoration: InputDecoration(
-            hintText: "Novo email",
-            filled: true,
-            fillColor: Colors.white,
-            border: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(12),
-              borderSide: BorderSide.none,
-            ),
-            prefixIcon: const Icon(Icons.email, color: Colors.grey),
-          ),
-        ),
-
-        const SizedBox(height: 20),
-
-        TextField(
-          controller: _newPasswordController,
-          obscureText: true,
-          style: const TextStyle(color: Colors.black),
-          decoration: InputDecoration(
-            hintText: "Nova senha",
-            filled: true,
-            fillColor: Colors.white,
-            border: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(12),
-              borderSide: BorderSide.none,
-            ),
-            prefixIcon: const Icon(Icons.lock, color: Colors.grey),
-          ),
-        ),
-
-        const SizedBox(height: 30),
-
-        ElevatedButton(
-          onPressed: () => telaSplash2(context),
-          style: ElevatedButton.styleFrom(
-            backgroundColor: Colors.orange,
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(12),
-            ),
-          ),
-          child: const Text("Cadastrar"),
         ),
       ],
     );
@@ -176,83 +111,41 @@ class _LoginState extends State<Login> {
 
     return Scaffold(
       body: Container(
-        color: const Color(0xFFFFCC80),
+        color: const Color(0xFFFFDDAA),
         child: Padding(
           padding: const EdgeInsets.only(top: 60, left: 25, right: 25),
           child: Column(
             children: [
 
-              // 🧾 LOGO
               const Column(
                 children: [
                   Text(
                     "ChefBook",
                     style: TextStyle(
-                      fontSize: 32,
+                      fontSize: 42,
                       fontWeight: FontWeight.bold,
-                      color: Colors.white,
+                      color: Colors.black,
                     ),
                   ),
                   SizedBox(height: 5),
                   Text(
                     "Seu organizador de receitas",
-                    style: TextStyle(color: Colors.white70),
+                    style: TextStyle(color: Colors.black87,
+                      fontSize: 18
+                    ),
                   ),
                 ],
               ),
 
               const SizedBox(height: 40),
 
-              // 🔘 MENU
-              Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  TextButton(
-                    onPressed: () => setState(() => _alterarParaEntrar()),
-                    child: Text(
-                      "ACESSAR",
-                      style: TextStyle(
-                        fontSize: _cadastrarActive ? 20 : 16,
-                        color: Colors.white,
-                        fontWeight: _cadastrarActive ? FontWeight.bold : FontWeight.normal,
-                      ),
-                    ),
-                  ),
-                  TextButton(
-                    onPressed: () => setState(() => _alterarParaCadastrar()),
-                    child: Text(
-                      "CADASTRAR",
-                      style: TextStyle(
-                        fontSize: _entrarActive ? 20 : 16,
-                        color: Colors.white,
-                        fontWeight: _entrarActive ? FontWeight.bold : FontWeight.normal,
-                      ),
-                    ),
-                  ),
-                ],
-              ),
-
-              const SizedBox(height: 20),
-
               Expanded(
-                child: _cadastrarActive
-                    ? _showEntrar(context)
-                    : _showCadastrar(),
+                child: _showEntrar(context),
               ),
             ],
           ),
         ),
       ),
     );
-  }
-
-  static void _alterarParaCadastrar() {
-    _entrarActive = true;
-    _cadastrarActive = false;
-  }
-
-  static void _alterarParaEntrar() {
-    _entrarActive = false;
-    _cadastrarActive = true;
   }
 }

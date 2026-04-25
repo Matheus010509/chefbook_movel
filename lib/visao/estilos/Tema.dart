@@ -9,7 +9,7 @@ ThemeData temaEscuro() {
   return baseTheme.copyWith(
     brightness: Brightness.dark,
 
-    primaryColor: const Color(0xFFFF8C00),      // laranja suave
+    primaryColor: const Color(0xFFFFCC80),      // laranja suave
     primaryColorLight: const Color(0xFFFFA733), // laranja claro
     primaryColorDark: const Color(0xFF1F1F1F),  // cinza escuro
 
