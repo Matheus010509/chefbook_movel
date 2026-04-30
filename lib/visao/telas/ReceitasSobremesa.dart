@@ -11,12 +11,10 @@ class ReceitasSobremesa extends StatelessWidget {
         backgroundColor: Colors.orange,
         centerTitle: true,
       ),
-
       body: SingleChildScrollView(
         padding: const EdgeInsets.all(16),
         child: Column(
           children: [
-
             _receitaCompleta(
               nome: "Bolo de Chocolate",
               ingredientes: [
@@ -30,9 +28,7 @@ class ReceitasSobremesa extends StatelessWidget {
                 "Asse por 40 minutos",
               ],
             ),
-
             const SizedBox(height: 20),
-
             _receitaCompleta(
               nome: "Brigadeiro",
               ingredientes: [
@@ -59,11 +55,15 @@ class ReceitasSobremesa extends StatelessWidget {
     return Container(
       width: double.infinity,
       margin: const EdgeInsets.only(bottom: 15), //estou dando uma margim
-      decoration: BoxDecoration( //aqui eu vou comecar a decorar minha "caixa", que as receitas vao ficar
-        color: Colors.orange.shade50, //estou dando uma cor meio alaranjada para ela
-        borderRadius: BorderRadius.circular(20), //colocando uma borda redonda
+      decoration: BoxDecoration(
+        //aqui eu vou comecar a decorar minha "caixa", que as receitas vao ficar
+        color: Colors.orange.shade50,
+        //estou dando uma cor meio alaranjada para ela
+        borderRadius: BorderRadius.circular(20),
+        //colocando uma borda redonda
         boxShadow: const [
-          BoxShadow( //estou coloando uma sombra preta
+          BoxShadow(
+            //estou coloando uma sombra preta
             color: Colors.black12,
             blurRadius: 5, //é o tamanho da sombra
             offset: Offset(0, 2),
@@ -73,7 +73,6 @@ class ReceitasSobremesa extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-
           //estilizando o titulo, colocando um fundo nele, deixando arrendondado
           Container(
             width: double.infinity,
@@ -95,10 +94,8 @@ class ReceitasSobremesa extends StatelessWidget {
                     fontWeight: FontWeight.bold,
                   ),
                 ),
-
                 IconButton(
-                  onPressed: () {
-                  },
+                  onPressed: () {},
                   icon: const Icon(
                     Icons.favorite_border,
                     color: Colors.red,
@@ -114,7 +111,6 @@ class ReceitasSobremesa extends StatelessWidget {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-
                 //ingredientes
                 const Text(
                   "Ingredientes:",
@@ -125,7 +121,8 @@ class ReceitasSobremesa extends StatelessWidget {
                 ),
                 const SizedBox(height: 5),
 
-                for (var item in ingredientes) //eu uso esse for para tranformar a lista em  topicos
+                for (var item
+                    in ingredientes) //eu uso esse for para tranformar a lista em  topicos
                   Text("• $item"),
 
                 const SizedBox(height: 12),
@@ -150,5 +147,4 @@ class ReceitasSobremesa extends StatelessWidget {
       ),
     );
   }
-
 }

@@ -12,7 +12,6 @@ class Splash2 extends StatefulWidget {
 }
 
 class _Splash2State extends State<Splash2> {
-
   @override
   void initState() {
     super.initState();

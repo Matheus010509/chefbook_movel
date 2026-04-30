@@ -61,8 +61,8 @@ class ReceitasLanche extends StatelessWidget {
     return Container(
       width: double.infinity,
       margin: const EdgeInsets.only(bottom: 15), //estou dando uma margim
-      decoration: BoxDecoration( //aqui eu vou comecar a decorar minha "caixa", que as receitas vao ficar
-        color: Colors.orange.shade50, //estou dando uma cor meio alaranjada para ela
+      decoration: BoxDecoration(
+        color: Colors.orange.shade50,
         borderRadius: BorderRadius.circular(20), //colocando uma borda redonda
         boxShadow: const [
           BoxShadow( //estou coloando uma sombra preta

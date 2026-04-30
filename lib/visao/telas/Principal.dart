@@ -12,13 +12,12 @@ class Principal extends StatefulWidget {
 }
 
 class _PrincipalState extends State<Principal> {
-
   int _currentIndex = 0;
 
   List<Widget> _screens = [
-    TelaUm(title: 'Home'),        // index 0
+    TelaUm(title: 'Home'), // index 0
     TelaDois(title: 'Favoritas'), // index 1
-    TelaTres(title: 'Perfil'),    // index 2
+    TelaTres(title: 'Perfil'), // index 2
   ];
 
   @override

@@ -9,8 +9,7 @@ class TelaRecuperacaoSenha extends StatefulWidget {
 }
 
 class _TelaRecuperacaoSenhaState extends State<TelaRecuperacaoSenha> {
-
-  telaLogin(context){
+  telaLogin(context) {
     Navigator.pushReplacement(
       context,
       MaterialPageRoute(builder: (context) => Login(title: 'Login')),
@@ -24,16 +23,12 @@ class _TelaRecuperacaoSenhaState extends State<TelaRecuperacaoSenha> {
         title: const Text('Recuperar senha'),
         centerTitle: true,
       ),
-
-
       body: Padding(
         padding: const EdgeInsets.all(20),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-
             const SizedBox(height: 20),
-
             const Text(
               "Digite seu e-mail",
               style: TextStyle(
@@ -41,16 +36,12 @@ class _TelaRecuperacaoSenhaState extends State<TelaRecuperacaoSenha> {
                 fontWeight: FontWeight.bold,
               ),
             ),
-
             const SizedBox(height: 10),
-
             const Text(
               "Enviaremos um link para redefinir sua senha",
               style: TextStyle(color: Colors.grey),
             ),
-
             const SizedBox(height: 30),
-
             TextField(
               decoration: InputDecoration(
                 hintText: 'Seu e-mail',
@@ -62,9 +53,7 @@ class _TelaRecuperacaoSenhaState extends State<TelaRecuperacaoSenha> {
                 ),
               ),
             ),
-
             const SizedBox(height: 30),
-
             SizedBox(
               width: double.infinity,
               height: 50,
@@ -79,9 +68,7 @@ class _TelaRecuperacaoSenhaState extends State<TelaRecuperacaoSenha> {
                 child: const Text("Enviar"),
               ),
             ),
-
             const SizedBox(height: 20),
-
             Center(
               child: TextButton(
                 onPressed: () => telaLogin(context),

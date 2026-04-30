@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:login/visao/estilos/EstilosTexto.dart';
+
 //import 'package:flutter_facebook_login/flutter_facebook_login.dart';
 //import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:login/visao/util/CustomIcons.dart';
@@ -22,9 +23,9 @@ class Splash1 extends StatefulWidget {
   @override
   _Splash1State createState() => _Splash1State();
 }
+
 //classe altualizavel da tela
 class _Splash1State extends State<Splash1> {
-
   //método de inicialização da tela
   @override
   void initState() {
@@ -36,6 +37,7 @@ class _Splash1State extends State<Splash1> {
       );
     });
   }
+
 //método de construção da interface da tela
   @override
   Widget build(BuildContext context) {
@@ -47,7 +49,10 @@ class _Splash1State extends State<Splash1> {
           mainAxisAlignment: MainAxisAlignment.center,
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
-            Text('Redirecionando...', style: EstilosTextosCustomizado.title(context),),
+            Text(
+              'Redirecionando...',
+              style: EstilosTextosCustomizado.title(context),
+            ),
             WidgetsUteis().espacoHorizontal15,
             //CircularProgressIndicator(),
             WidgetsUteis().barraCircularProgresso(),

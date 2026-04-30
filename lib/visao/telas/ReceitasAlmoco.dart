@@ -10,15 +10,11 @@ class ReceitasAlmoco extends StatelessWidget {
         title: const Text('Almoço'),
         backgroundColor: Colors.orange,
         centerTitle: true,
-
-
       ),
-
       body: SingleChildScrollView(
         padding: const EdgeInsets.all(16),
         child: Column(
           children: [
-
             _receitaCompleta(
               nome: "Arroz e Feijão",
               ingredientes: [
@@ -32,9 +28,7 @@ class ReceitasAlmoco extends StatelessWidget {
                 "Sirva juntos",
               ],
             ),
-
             const SizedBox(height: 20),
-
             _receitaCompleta(
               nome: "Carne Assada",
               ingredientes: [
@@ -48,7 +42,6 @@ class ReceitasAlmoco extends StatelessWidget {
                 "Asse por 40 minutos",
               ],
             ),
-
           ],
         ),
       ),
@@ -62,14 +55,15 @@ class ReceitasAlmoco extends StatelessWidget {
   }) {
     return Container(
       width: double.infinity,
-      margin: const EdgeInsets.only(bottom: 15), //estou dando uma margim
-      decoration: BoxDecoration( //aqui eu vou comecar a decorar minha "caixa", que as receitas vao ficar
-        color: Colors.orange.shade50, //estou dando uma cor meio alaranjada para ela
-        borderRadius: BorderRadius.circular(20), //colocando uma borda redonda
+      margin: const EdgeInsets.only(bottom: 15),
+      decoration: BoxDecoration(
+        color: Colors.orange.shade50,
+        borderRadius: BorderRadius.circular(20),
         boxShadow: const [
-          BoxShadow( //estou coloando uma sombra preta
+          BoxShadow(
+            //estou coloando uma sombra preta
             color: Colors.black12,
-            blurRadius: 5, //é o tamanho da sombra
+            blurRadius: 5,
             offset: Offset(0, 2),
           )
         ],
@@ -77,7 +71,6 @@ class ReceitasAlmoco extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-
           //estilizando o titulo, colocando um fundo nele, deixando arrendondado
           Container(
             width: double.infinity,
@@ -99,10 +92,8 @@ class ReceitasAlmoco extends StatelessWidget {
                     fontWeight: FontWeight.bold,
                   ),
                 ),
-
                 IconButton(
-                  onPressed: () {
-                  },
+                  onPressed: () {},
                   icon: const Icon(
                     Icons.favorite_border,
                     color: Colors.red,
@@ -118,7 +109,6 @@ class ReceitasAlmoco extends StatelessWidget {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-
                 //ingredientes
                 const Text(
                   "Ingredientes:",
@@ -129,7 +119,8 @@ class ReceitasAlmoco extends StatelessWidget {
                 ),
                 const SizedBox(height: 5),
 
-                for (var item in ingredientes) //eu uso esse for para tranformar a lista em  topicos
+                for (var item
+                    in ingredientes) //eu uso esse for para tranformar a lista em  topicos
                   Text("• $item"),
 
                 const SizedBox(height: 12),

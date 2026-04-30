@@ -11,7 +11,6 @@ class TelaDois extends StatefulWidget {
 }
 
 class _TelaDoisState extends State<TelaDois> {
-
   @override
   Widget build(BuildContext context) {
     ScreenUtil.init(context, designSize: const Size(750, 1304));
@@ -44,7 +43,6 @@ class _TelaDoisState extends State<TelaDois> {
         padding: const EdgeInsets.all(16.0),
         child: Column(
           children: [
-
             _receitaCompleta(
               nome: "Lasanha",
               ingredientes: [
@@ -61,9 +59,7 @@ class _TelaDoisState extends State<TelaDois> {
                 "Leve ao forno",
               ],
             ),
-
             const SizedBox(height: 20),
-
             _receitaCompleta(
               nome: "Bolo de Chocolate",
               ingredientes: [
@@ -108,8 +104,7 @@ class _TelaDoisState extends State<TelaDois> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-
-          // 🔥 TÍTULO COM FUNDO
+          //  TÍTULO COM FUNDO
           Container(
             width: double.infinity,
             padding: const EdgeInsets.all(12),
@@ -135,14 +130,13 @@ class _TelaDoisState extends State<TelaDois> {
             ),
           ),
 
-          // 📦 CONTEÚDO
+          // CONTEÚDO
           Padding(
             padding: const EdgeInsets.all(16),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-
-                // 🧾 INGREDIENTES
+                // INGREDIENTES
                 const Text(
                   "Ingredientes:",
                   style: TextStyle(
@@ -153,12 +147,11 @@ class _TelaDoisState extends State<TelaDois> {
 
                 const SizedBox(height: 5),
 
-                for (var item in ingredientes)
-                  Text("• $item"),
+                for (var item in ingredientes) Text("• $item"),
 
                 const SizedBox(height: 12),
 
-                // 👨‍🍳 PREPARO
+                // PREPARO
                 const Text(
                   "Modo de preparo:",
                   style: TextStyle(
@@ -169,8 +162,7 @@ class _TelaDoisState extends State<TelaDois> {
 
                 const SizedBox(height: 5),
 
-                for (var passo in preparo)
-                  Text("• $passo"),
+                for (var passo in preparo) Text("• $passo"),
               ],
             ),
           ),

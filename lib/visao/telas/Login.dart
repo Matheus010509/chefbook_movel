@@ -9,6 +9,7 @@ TextEditingController _passwordController = TextEditingController();
 
 class Login extends StatefulWidget {
   const Login({super.key, required this.title});
+
   final String title;
 
   @override
@@ -16,15 +17,14 @@ class Login extends StatefulWidget {
 }
 
 class _LoginState extends State<Login> {
-
-  telaSplash2(context){
+  telaSplash2(context) {
     Navigator.pushReplacement(
       context,
       MaterialPageRoute(builder: (context) => Splash2()),
     );
   }
 
-  telaRecuperacaoSenha(context){
+  telaRecuperacaoSenha(context) {
     Navigator.pushReplacement(
       context,
       MaterialPageRoute(builder: (context) => TelaRecuperacaoSenha()),
@@ -36,9 +36,7 @@ class _LoginState extends State<Login> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
-
         const SizedBox(height: 20),
-
         TextField(
           controller: _emailController,
           decoration: InputDecoration(
@@ -52,9 +50,7 @@ class _LoginState extends State<Login> {
             prefixIcon: const Icon(Icons.email),
           ),
         ),
-
         const SizedBox(height: 20),
-
         TextField(
           controller: _passwordController,
           obscureText: true,
@@ -69,9 +65,7 @@ class _LoginState extends State<Login> {
             prefixIcon: const Icon(Icons.lock),
           ),
         ),
-
         const SizedBox(height: 30),
-
         SizedBox(
           height: 50,
           child: ElevatedButton(
@@ -85,9 +79,7 @@ class _LoginState extends State<Login> {
             child: const Text("Acessar"),
           ),
         ),
-
         const SizedBox(height: 15),
-
         TextButton(
           onPressed: () => telaRecuperacaoSenha(context),
           child: const Text(
@@ -101,7 +93,6 @@ class _LoginState extends State<Login> {
 
   @override
   Widget build(BuildContext context) {
-
     SystemChrome.setPreferredOrientations([
       DeviceOrientation.portraitUp,
       DeviceOrientation.portraitDown,
@@ -116,7 +107,6 @@ class _LoginState extends State<Login> {
           padding: const EdgeInsets.only(top: 60, left: 25, right: 25),
           child: Column(
             children: [
-
               const Column(
                 children: [
                   Text(
@@ -130,15 +120,11 @@ class _LoginState extends State<Login> {
                   SizedBox(height: 5),
                   Text(
                     "Seu organizador de receitas",
-                    style: TextStyle(color: Colors.black87,
-                      fontSize: 18
-                    ),
+                    style: TextStyle(color: Colors.black87, fontSize: 18),
                   ),
                 ],
               ),
-
               const SizedBox(height: 40),
-
               Expanded(
                 child: _showEntrar(context),
               ),

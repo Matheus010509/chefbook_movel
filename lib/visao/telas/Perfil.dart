@@ -11,10 +11,8 @@ class TelaTres extends StatefulWidget {
 }
 
 class _TelaTresState extends State<TelaTres> {
-
   @override
   Widget build(BuildContext context) {
-
     ScreenUtil.init(context, designSize: const Size(750, 1304));
 
     return Scaffold(
@@ -39,18 +37,16 @@ class _TelaTresState extends State<TelaTres> {
           ),
         ),
       ),
-
       body: Padding(
         padding: const EdgeInsets.all(16.0),
         child: Column(
           children: [
-
-            Expanded( // evita erro de overflow
+            Expanded(
+              // evita erro de overflow
               child: SingleChildScrollView(
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-
                     const SizedBox(height: 40),
 
                     // Ícone de perfil
@@ -80,7 +76,6 @@ class _TelaTresState extends State<TelaTres> {
                 ),
               ),
             ),
-
           ],
         ),
       ),
@@ -100,9 +95,11 @@ class _TelaTresState extends State<TelaTres> {
         children: [
           Text(
             "$titulo: ",
-            style: const TextStyle(fontWeight: FontWeight.bold), //colocando o titulo em negrito
+            style: const TextStyle(
+                fontWeight: FontWeight.bold), //colocando o titulo em negrito
           ),
-          Expanded( //  evita quebrar layout se texto for grande
+          Expanded(
+            //  evita quebrar layout se texto for grande
             child: Text(valor),
           ),
         ],
