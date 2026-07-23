@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:login/controle/CReceitas.dart';
+import 'package:login/modelo/classes/receita.dart';
 
 class TelaDois extends StatefulWidget {
   const TelaDois({super.key, required this.title});
@@ -11,6 +13,28 @@ class TelaDois extends StatefulWidget {
 }
 
 class _TelaDoisState extends State<TelaDois> {
+  List<Receita> _favoritas = [];
+
+  @override
+  void initState() {
+    super.initState();
+    _carregarFavoritas();
+  }
+
+  Future<void> _carregarFavoritas() async {
+    List<Receita> lista =
+    await ListaReceitaController.listarFavoritas();
+
+    setState(() {
+      _favoritas = lista;
+    });
+  }
+
+  Future<void> _desfavoritar(int id) async {
+    await ListaReceitaController.favoritarReceita(id);
+    await _carregarFavoritas();
+  }
+
   @override
   Widget build(BuildContext context) {
     ScreenUtil.init(context, designSize: const Size(750, 1304));
@@ -20,8 +44,6 @@ class _TelaDoisState extends State<TelaDois> {
         centerTitle: true,
         backgroundColor: Colors.white,
         elevation: 0,
-
-//titulo "Receitas favoritas"
         title: Container(
           padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
           decoration: BoxDecoration(
@@ -37,59 +59,26 @@ class _TelaDoisState extends State<TelaDois> {
           ),
         ),
       ),
-
-      // SCROLL
-      body: SingleChildScrollView(
-        padding: const EdgeInsets.all(16.0),
-        child: Column(
-          children: [
-            _receitaCompleta(
-              nome: "Lasanha",
-              ingredientes: [
-                "500g de carne moída",
-                "1 pacote de massa de lasanha",
-                "2 xícaras de molho de tomate",
-                "300g de queijo mussarela",
-                "Sal a gosto",
-              ],
-              preparo: [
-                "Cozinhe a carne",
-                "Adicione o molho",
-                "Monte as camadas",
-                "Leve ao forno",
-              ],
-            ),
-            const SizedBox(height: 20),
-            _receitaCompleta(
-              nome: "Bolo de Chocolate",
-              ingredientes: [
-                "2 xícaras de farinha",
-                "1 xícara de açúcar",
-                "1 xícara de chocolate",
-                "3 ovos",
-                "1 xícara de leite",
-              ],
-              preparo: [
-                "Misture tudo",
-                "Bata bem",
-                "Coloque na forma",
-                "Asse por 40 minutos",
-              ],
-            ),
-          ],
+      body: _favoritas.isEmpty
+          ? const Center(
+        child: Text(
+          'Nenhuma receita favoritada.',
+          style: TextStyle(fontSize: 18),
         ),
+      )
+          : ListView.builder(
+        padding: const EdgeInsets.all(16),
+        itemCount: _favoritas.length,
+        itemBuilder: (context, index) {
+          return _receitaCompleta(_favoritas[index]);
+        },
       ),
     );
   }
 
-  Widget _receitaCompleta({
-    required String nome,
-    required List<String> ingredientes,
-    required List<String> preparo,
-  }) {
+  Widget _receitaCompleta(Receita receita) {
     return Container(
-      width: double.infinity,
-      margin: const EdgeInsets.only(bottom: 15),
+      margin: const EdgeInsets.only(bottom: 20),
       decoration: BoxDecoration(
         color: Colors.orange.shade50,
         borderRadius: BorderRadius.circular(20),
@@ -98,15 +87,13 @@ class _TelaDoisState extends State<TelaDois> {
             color: Colors.black12,
             blurRadius: 5,
             offset: Offset(0, 2),
-          )
+          ),
         ],
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          //  TÍTULO COM FUNDO
           Container(
-            width: double.infinity,
             padding: const EdgeInsets.all(12),
             decoration: BoxDecoration(
               color: Colors.orange.shade200,
@@ -116,27 +103,31 @@ class _TelaDoisState extends State<TelaDois> {
               ),
             ),
             child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                Text(
-                  nome,
-                  style: const TextStyle(
-                    fontSize: 20,
-                    fontWeight: FontWeight.bold,
+                Expanded(
+                  child: Text(
+                    receita.nome,
+                    style: const TextStyle(
+                      fontWeight: FontWeight.bold,
+                      fontSize: 20,
+                    ),
                   ),
                 ),
-                const Icon(Icons.favorite, color: Colors.red),
+                IconButton(
+                  icon: const Icon(
+                    Icons.favorite,
+                    color: Colors.red,
+                  ),
+                  onPressed: () => _desfavoritar(receita.id),
+                ),
               ],
             ),
           ),
-
-          // CONTEÚDO
           Padding(
             padding: const EdgeInsets.all(16),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                // INGREDIENTES
                 const Text(
                   "Ingredientes:",
                   style: TextStyle(
@@ -144,14 +135,11 @@ class _TelaDoisState extends State<TelaDois> {
                     fontSize: 16,
                   ),
                 ),
-
-                const SizedBox(height: 5),
-
-                for (var item in ingredientes) Text("• $item"),
-
-                const SizedBox(height: 12),
-
-                // PREPARO
+                const SizedBox(height: 8),
+                ...receita.ingredientes.map(
+                      (e) => Text("• $e"),
+                ),
+                const SizedBox(height: 16),
                 const Text(
                   "Modo de preparo:",
                   style: TextStyle(
@@ -159,10 +147,10 @@ class _TelaDoisState extends State<TelaDois> {
                     fontSize: 16,
                   ),
                 ),
-
-                const SizedBox(height: 5),
-
-                for (var passo in preparo) Text("• $passo"),
+                const SizedBox(height: 8),
+                ...receita.preparo.map(
+                      (e) => Text("• $e"),
+                ),
               ],
             ),
           ),
