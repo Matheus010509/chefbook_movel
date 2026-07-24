@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+
 import 'package:login/visao/estilos/EstilosTexto.dart';
 import 'package:login/visao/telas/Principal.dart';
 import 'package:login/visao/util/WidgetsUteis.dart';
@@ -16,13 +17,13 @@ class _Splash2State extends State<Splash2> {
   void initState() {
     super.initState();
 
-    Future.delayed(const Duration(seconds: 2), () {
-      if (!mounted) return; //
+    Future.delayed(const Duration(seconds: 3), () {
+      if (!mounted) return;
 
       Navigator.pushReplacement(
         context,
         MaterialPageRoute(
-          builder: (context) => const Principal(),
+          builder: (_) => const Principal(),
         ),
       );
     });
@@ -30,7 +31,10 @@ class _Splash2State extends State<Splash2> {
 
   @override
   Widget build(BuildContext context) {
-    ScreenUtil.init(context);
+    ScreenUtil.init(
+      context,
+      designSize: const Size(750, 1304),
+    );
 
     return Scaffold(
       backgroundColor: Theme.of(context).primaryColor,
@@ -39,7 +43,7 @@ class _Splash2State extends State<Splash2> {
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             Text(
-              'Entrando...',
+              "Entrando...",
               style: EstilosTextosCustomizado.title(context),
             ),
             const SizedBox(height: 20),

@@ -1,60 +1,78 @@
-//import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:login/controle/autorizacaoController.dart';
 import 'package:login/visao/estilos/EstilosTexto.dart';
-
-//import 'package:flutter_facebook_login/flutter_facebook_login.dart';
-//import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:login/visao/util/CustomIcons.dart';
-
-import 'package:login/visao/telas/Splash1.dart';
-import 'package:login/visao/util/SocialIcons.dart';
-
-//import 'package:mvc_pattern/mvc_pattern.dart';
-
-import 'package:login/main.dart';
 import 'package:login/visao/util/WidgetsUteis.dart';
+import 'package:login/visao/telas/Login.dart';
+import 'package:login/visao/telas/Splash2.dart';
 
-import 'Login.dart';
-
-//classe inicial da tela
+// Classe inicial da tela
 class Splash1 extends StatefulWidget {
+  const Splash1({super.key});
+
   @override
-  _Splash1State createState() => _Splash1State();
+  State<Splash1> createState() => _Splash1State();
 }
 
-//classe altualizavel da tela
 class _Splash1State extends State<Splash1> {
-  //método de inicialização da tela
   @override
   void initState() {
     super.initState();
-    Future.delayed(Duration(seconds: 2), () {
-      Navigator.pushReplacement(
-        context,
-        MaterialPageRoute(builder: (context) => Login(title: 'ChefBook')),
-      );
+
+    Future.delayed(const Duration(seconds: 2), () async {
+      await verificaLogin();
     });
   }
 
-//método de construção da interface da tela
+  Future<void> verificaLogin() async {
+    debugPrint("[FEEDBACK] Verificando autenticação salva...");
+
+    bool autenticado =
+    await AutorizaController.verificaAutorizacaoOffline();
+
+    if (!mounted) return;
+
+    if (autenticado) {
+      debugPrint("[FEEDBACK] Usuário já autenticado.");
+
+      Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(
+          builder: (_) => Splash2(),
+        ),
+      );
+    } else {
+      debugPrint("[FEEDBACK] Usuário não autenticado.");
+
+      Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(
+          builder: (_) => const Login(
+            title: "ChefBook",
+          ),
+        ),
+      );
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
-    ScreenUtil.init(context);
+    ScreenUtil.init(
+      context,
+      designSize: const Size(750, 1304),
+    );
+
     return Scaffold(
       backgroundColor: Theme.of(context).primaryColor,
       body: Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
-          crossAxisAlignment: CrossAxisAlignment.center,
           children: [
             Text(
-              'Redirecionando...',
+              "Redirecionando...",
               style: EstilosTextosCustomizado.title(context),
             ),
             WidgetsUteis().espacoHorizontal15,
-            //CircularProgressIndicator(),
             WidgetsUteis().barraCircularProgresso(),
           ],
         ),

@@ -1,11 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+
+import 'package:login/controle/autorizacaoController.dart';
+import 'package:login/modelo/classes/autorizacao.dart';
+
 import 'package:login/visao/telas/Splash2.dart';
 import 'package:login/visao/telas/TelaRecuperacaoSenha.dart';
-
-TextEditingController _emailController = TextEditingController();
-TextEditingController _passwordController = TextEditingController();
 
 class Login extends StatefulWidget {
   const Login({super.key, required this.title});
@@ -17,77 +18,158 @@ class Login extends StatefulWidget {
 }
 
 class _LoginState extends State<Login> {
-  telaSplash2(context) {
+  final _formKey = GlobalKey<FormState>();
+
+  final TextEditingController _emailController = TextEditingController();
+  final TextEditingController _passwordController = TextEditingController();
+
+  @override
+  void dispose() {
+    _emailController.dispose();
+    _passwordController.dispose();
+    super.dispose();
+  }
+
+  Future<void> _enviarFormulario() async {
+    if (!_formKey.currentState!.validate()) {
+      return;
+    }
+
+    Autorizacao auth = Autorizacao(
+      usuario: _emailController.text.trim(),
+      senha: _passwordController.text,
+      token_autorizacao: '',
+    );
+
+    bool autenticado =
+    await AutorizaController.verificaAutorizacaoOnline(auth);
+
+    if (!mounted) return;
+
+    if (autenticado) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text(
+            "Usuário autenticado: ${auth.usuario}",
+          ),
+        ),
+      );
+
+      Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(
+          builder: (_) => Splash2(),
+        ),
+      );
+    } else {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text("Usuário ou senha inválidos."),
+        ),
+      );
+    }
+  }
+
+  void telaRecuperacaoSenha() {
     Navigator.pushReplacement(
       context,
-      MaterialPageRoute(builder: (context) => Splash2()),
+      MaterialPageRoute(
+        builder: (_) => TelaRecuperacaoSenha(),
+      ),
     );
   }
 
-  telaRecuperacaoSenha(context) {
-    Navigator.pushReplacement(
-      context,
-      MaterialPageRoute(builder: (context) => TelaRecuperacaoSenha()),
-    );
-  }
+  Widget _showEntrar() {
+    return Form(
+      key: _formKey,
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: [
+          const SizedBox(height: 20),
 
-  // LOGIN
-  Widget _showEntrar(context) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.stretch,
-      children: [
-        const SizedBox(height: 20),
-        TextField(
-          controller: _emailController,
-          decoration: InputDecoration(
-            hintText: "Email",
-            filled: true,
-            fillColor: Colors.white,
-            border: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(12),
-              borderSide: BorderSide.none,
-            ),
-            prefixIcon: const Icon(Icons.email),
-          ),
-        ),
-        const SizedBox(height: 20),
-        TextField(
-          controller: _passwordController,
-          obscureText: true,
-          decoration: InputDecoration(
-            hintText: "Senha",
-            filled: true,
-            fillColor: Colors.white,
-            border: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(12),
-              borderSide: BorderSide.none,
-            ),
-            prefixIcon: const Icon(Icons.lock),
-          ),
-        ),
-        const SizedBox(height: 30),
-        SizedBox(
-          height: 50,
-          child: ElevatedButton(
-            onPressed: () => telaSplash2(context),
-            style: ElevatedButton.styleFrom(
-              backgroundColor: Colors.orange,
-              shape: RoundedRectangleBorder(
+          // EMAIL
+          TextFormField(
+            controller: _emailController,
+            keyboardType: TextInputType.emailAddress,
+            decoration: InputDecoration(
+              hintText: "Email",
+              filled: true,
+              fillColor: Colors.white,
+              prefixIcon: const Icon(Icons.email),
+              border: OutlineInputBorder(
                 borderRadius: BorderRadius.circular(12),
+                borderSide: BorderSide.none,
               ),
             ),
-            child: const Text("Acessar"),
+            validator: (value) {
+              if (value == null || value.trim().isEmpty) {
+                return "Informe seu email";
+              }
+
+              if (!value.contains("@")) {
+                return "Email inválido";
+              }
+
+              return null;
+            },
           ),
-        ),
-        const SizedBox(height: 15),
-        TextButton(
-          onPressed: () => telaRecuperacaoSenha(context),
-          child: const Text(
-            "Esqueci minha senha",
-            style: TextStyle(color: Colors.black),
+
+          const SizedBox(height: 20),
+
+          // SENHA
+          TextFormField(
+            controller: _passwordController,
+            obscureText: true,
+            decoration: InputDecoration(
+              hintText: "Senha",
+              filled: true,
+              fillColor: Colors.white,
+              prefixIcon: const Icon(Icons.lock),
+              border: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(12),
+                borderSide: BorderSide.none,
+              ),
+            ),
+            validator: (value) {
+              if (value == null || value.isEmpty) {
+                return "Informe sua senha";
+              }
+
+              if (value.length < 6) {
+                return "A senha deve possuir pelo menos 6 caracteres";
+              }
+
+              return null;
+            },
           ),
-        ),
-      ],
+
+          const SizedBox(height: 30),
+
+          SizedBox(
+            height: 50,
+            child: ElevatedButton(
+              onPressed: _enviarFormulario,
+              style: ElevatedButton.styleFrom(
+                backgroundColor: Colors.orange,
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(12),
+                ),
+              ),
+              child: const Text("Acessar"),
+            ),
+          ),
+
+          const SizedBox(height: 15),
+
+          TextButton(
+            onPressed: telaRecuperacaoSenha,
+            child: const Text(
+              "Esqueci minha senha",
+              style: TextStyle(color: Colors.black),
+            ),
+          ),
+        ],
+      ),
     );
   }
 
@@ -98,13 +180,20 @@ class _LoginState extends State<Login> {
       DeviceOrientation.portraitDown,
     ]);
 
-    ScreenUtil.init(context, designSize: const Size(750, 1304));
+    ScreenUtil.init(
+      context,
+      designSize: const Size(750, 1304),
+    );
 
     return Scaffold(
       body: Container(
         color: const Color(0xFFFFDDAA),
         child: Padding(
-          padding: const EdgeInsets.only(top: 60, left: 25, right: 25),
+          padding: const EdgeInsets.only(
+            top: 60,
+            left: 25,
+            right: 25,
+          ),
           child: Column(
             children: [
               const Column(
@@ -120,13 +209,16 @@ class _LoginState extends State<Login> {
                   SizedBox(height: 5),
                   Text(
                     "Seu organizador de receitas",
-                    style: TextStyle(color: Colors.black87, fontSize: 18),
+                    style: TextStyle(
+                      color: Colors.black87,
+                      fontSize: 18,
+                    ),
                   ),
                 ],
               ),
               const SizedBox(height: 40),
               Expanded(
-                child: _showEntrar(context),
+                child: _showEntrar(),
               ),
             ],
           ),
