@@ -1,17 +1,10 @@
-# carteira_master
+# 🍳 ChefBook
 
-A new Flutter project.
+O presente trabalho apresenta o desenvolvimento do **ChefBook**...
 
-## Getting Started
+<p align="center">
+  <img src="assets/screenshots/chefBook.png" width="350">
+</p>
 
-This project is a starting point for a Flutter application.
+Um sistema web e mobile voltado para o gerenciamento e organização de receitas culinárias. A proposta surge diante da necessidade de substituir métodos tradicionais, como anotações em papel ou registros dispersos, por uma solução digital centralizada, prática e acessível.
 
-A few resources to get you started if this is your first Flutter project:
-
-- [Learn Flutter](https://docs.flutter.dev/get-started/learn-flutter)
-- [Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Flutter learning resources](https://docs.flutter.dev/reference/learning-resources)
-
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
