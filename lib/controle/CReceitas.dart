@@ -1,39 +1,45 @@
-import 'package:login/modelo/Objects/ReceitasData.dart';
+import 'package:login/modelo/LocalStorageService.dart';
 import 'package:login/modelo/classes/receita.dart';
 
 class ListaReceitaController {
-
   static Future<List<Receita>> listarReceitas({
     String? categoria,
   }) async {
+    final receitas =
+    await LocalStorageService.carregarReceitas();
 
     if (categoria == null) {
-      return ReceitasData.todas;
+      return receitas;
     }
 
-    return ReceitasData.todas
+    return receitas
         .where((r) => r.categoria == categoria)
         .toList();
   }
 
   static Future<List<Receita>> listarFavoritas() async {
+    final receitas =
+    await LocalStorageService.carregarReceitas();
 
-    return ReceitasData.todas
+    return receitas
         .where((r) => r.favorito)
         .toList();
   }
 
   static Future<void> favoritarReceita(int id) async {
+    final receitas =
+    await LocalStorageService.carregarReceitas();
 
-    for (Receita receita in ReceitasData.todas) {
-
+    for (final receita in receitas) {
       if (receita.id == id) {
-
         receita.favorito = !receita.favorito;
+
+        await LocalStorageService.salvarReceitas(
+          receitas,
+        );
 
         break;
       }
     }
   }
-
 }

@@ -7,48 +7,163 @@ class LocalStorageService {
   static const String LISTA_RECEITAS = 'lista_receitas';
   static const String AUTORIZACAO = 'autorizacao';
 
-  // Salvar a lista
-  static Future<void> salvarAutorizacao( Autorizacao auth) async {
-    //instancia a classe sp
-    final SharedPreferences prefs = await SharedPreferences.getInstance();
-    //converte a lista de produtos em string
+  // AUTORIZAÇÃO
+
+
+  static Future<void> salvarAutorizacao(Autorizacao auth) async {
+    final SharedPreferences prefs =
+    await SharedPreferences.getInstance();
+
     final String encodedData = json.encode(auth.toMap());
-    //Persiste o dadop
+
     await prefs.setString(AUTORIZACAO, encodedData);
   }
-  // Salvar a lista
+
   static Future<void> desgravarAutorizacao() async {
-    //instancia a classe sp
-    final SharedPreferences prefs = await SharedPreferences.getInstance();
+    final SharedPreferences prefs =
+    await SharedPreferences.getInstance();
+
     await prefs.remove(AUTORIZACAO);
   }
-  // Recuperar a lista
+
   static Future<Autorizacao?> carregarAutorizacao() async {
-    final SharedPreferences prefs = await SharedPreferences.getInstance();
-    final String? authJson = prefs.getString(AUTORIZACAO);
+    final SharedPreferences prefs =
+    await SharedPreferences.getInstance();
 
-    if (authJson == null) return null;
+    final String? authJson =
+    prefs.getString(AUTORIZACAO);
 
-    //RETORNA LISTA DE PRODUTOS
+    if (authJson == null) {
+      return null;
+    }
+
     return Autorizacao.fromMap(json.decode(authJson));
   }
-  // Salvar a lista
-  static Future<void> salvarReceitas(List<Receita> lista) async {
-    final SharedPreferences prefs = await SharedPreferences.getInstance();
 
-    final String encodedData = Receita.encode(lista);
 
-    await prefs.setString(LISTA_RECEITAS, encodedData);
+  // RECEITAS
+
+
+  static Future<void> salvarReceitas(
+      List<Receita> lista) async {
+    final SharedPreferences prefs =
+    await SharedPreferences.getInstance();
+
+    final String encodedData =
+    Receita.encode(lista);
+
+    await prefs.setString(
+      LISTA_RECEITAS,
+      encodedData,
+    );
   }
 
-  // Recuperar a lista
   static Future<List<Receita>> carregarReceitas() async {
-    final SharedPreferences prefs = await SharedPreferences.getInstance();
+    final SharedPreferences prefs =
+    await SharedPreferences.getInstance();
 
-    final String? receitasJson = prefs.getString(LISTA_RECEITAS);
+    final String? receitasJson =
+    prefs.getString(LISTA_RECEITAS);
 
-    if (receitasJson == null) return [];
+    // Primeira execução:
+    // ainda não existem receitas salvas.
+    if (receitasJson == null) {
+      final List<Receita> receitasIniciais = [
+        Receita(
+          id: 1,
+          nome: "Arroz e Feijão",
+          categoria: "almoco",
+          ingredientes: [
+            "Arroz",
+            "Feijão",
+            "Sal",
+          ],
+          preparo: [
+            "Cozinhe o arroz.",
+            "Cozinhe o feijão.",
+            "Sirva juntos.",
+          ],
+          favorito: false,
+        ),
 
+        Receita(
+          id: 2,
+          nome: "Carne Assada",
+          categoria: "almoco",
+          ingredientes: [
+            "Carne",
+            "Alho",
+            "Sal",
+          ],
+          preparo: [
+            "Tempere a carne.",
+            "Leve ao forno.",
+            "Asse por 40 minutos.",
+          ],
+          favorito: false,
+        ),
+
+        Receita(
+          id: 3,
+          nome: "Lasanha",
+          categoria: "janta",
+          ingredientes: [
+            "500g de carne moída",
+            "1 pacote de massa de lasanha",
+            "2 xícaras de molho de tomate",
+            "300g de mussarela",
+          ],
+          preparo: [
+            "Prepare o molho.",
+            "Monte as camadas.",
+            "Leve ao forno por 40 minutos.",
+          ],
+          favorito: false,
+        ),
+
+        Receita(
+          id: 4,
+          nome: "Sanduíche Natural",
+          categoria: "lanche",
+          ingredientes: [
+            "Pão de forma",
+            "Peito de peru",
+            "Alface",
+            "Tomate",
+          ],
+          preparo: [
+            "Monte o sanduíche.",
+            "Sirva gelado.",
+          ],
+          favorito: false,
+        ),
+
+        Receita(
+          id: 5,
+          nome: "Brigadeiro",
+          categoria: "sobremesa",
+          ingredientes: [
+            "Leite condensado",
+            "Chocolate em pó",
+            "Manteiga",
+          ],
+          preparo: [
+            "Misture os ingredientes.",
+            "Mexa até engrossar.",
+            "Deixe esfriar.",
+          ],
+          favorito: false,
+        ),
+      ];
+
+      // Salva as receitas no SharedPreferences.
+      await salvarReceitas(receitasIniciais);
+
+      return receitasIniciais;
+    }
+
+    // Se já existem receitas salvas,
+    // carrega diretamente do SharedPreferences.
     return Receita.decode(receitasJson);
   }
 }
