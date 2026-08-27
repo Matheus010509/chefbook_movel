@@ -46,7 +46,7 @@ class _Splash2State extends State<Splash2> {
               "Entrando...",
               style: EstilosTextosCustomizado.title(context),
             ),
-            const SizedBox(height: 20),
+            WidgetsUteis().espacoHorizontal15,
             WidgetsUteis().barraCircularProgresso(),
           ],
         ),

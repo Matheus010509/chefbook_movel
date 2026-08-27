@@ -35,7 +35,5 @@ class Autorizacao {
 
   // Facilita a conversão de uma String JSON para uma lista de objetos
   static List<Autorizacao> decode(String AutorizacaosJson) =>
-      (json.decode(AutorizacaosJson) as List<dynamic>)
-          .map<Autorizacao>((item) => Autorizacao.fromMap(item))
-          .toList();
+      (json.decode(AutorizacaosJson) as List<dynamic>).map<Autorizacao>((item) => Autorizacao.fromMap(item)).toList();
 }

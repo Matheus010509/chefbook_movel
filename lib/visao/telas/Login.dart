@@ -6,7 +6,7 @@ import 'package:login/controle/autorizacaoController.dart';
 import 'package:login/modelo/classes/autorizacao.dart';
 
 import 'package:login/visao/telas/Splash2.dart';
-import 'package:login/visao/telas/TelaRecuperacaoSenha.dart';
+
 
 class Login extends StatefulWidget {
   const Login({super.key, required this.title});
@@ -33,16 +33,12 @@ class _LoginState extends State<Login> {
   Future<void> _enviarFormulario() async {
     if (!_formKey.currentState!.validate()) {
       return;
-    }
+    } //ele envia os dados para a classe autorizacao.
 
-    Autorizacao auth = Autorizacao(
-      usuario: _emailController.text.trim(),
-      senha: _passwordController.text,
-      token_autorizacao: '',
-    );
+    Autorizacao auth = Autorizacao(usuario: _emailController.text.trim(), senha: _passwordController.text, token_autorizacao: '',);
 
-    bool autenticado =
-    await AutorizaController.verificaAutorizacaoOnline(auth);
+    bool autenticado = await AutorizaController.verificaAutorizacaoOnline(auth); //passo o usuario para ver se bate com o login salvo.
+    //ele verifica isso no autorizacaocontroller
 
     if (!mounted) return;
 
@@ -50,7 +46,7 @@ class _LoginState extends State<Login> {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
           content: Text(
-            "Usuário autenticado: ${auth.usuario}",
+            "Usuário autenticado: ${auth.usuario}", //mensagem rapida para mostrar que esta autenticado. E mostrar o email
           ),
         ),
       );
@@ -58,26 +54,18 @@ class _LoginState extends State<Login> {
       Navigator.pushReplacement(
         context,
         MaterialPageRoute(
-          builder: (_) => Splash2(),
+          builder: (_) => Splash2(), //chamo o splash que vai chamar a tela Inicio
         ),
       );
     } else {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
-          content: Text("Usuário ou senha inválidos."),
+          content: Text("Usuário ou senha inválidos."), //caso o auth for diferente do padrao, manda uma mensagem rapida tmb falando que nao é validos
         ),
       );
     }
   }
 
-  void telaRecuperacaoSenha() {
-    Navigator.pushReplacement(
-      context,
-      MaterialPageRoute(
-        builder: (_) => TelaRecuperacaoSenha(),
-      ),
-    );
-  }
 
   Widget _showEntrar() {
     return Form(
@@ -106,7 +94,7 @@ class _LoginState extends State<Login> {
                 return "Informe seu email";
               }
 
-              if (!value.contains("@")) {
+              if (!value.contains("@")) { //para ser email precisa ter o @, senao da uma mensagem vermelha
                 return "Email inválido";
               }
 
@@ -148,7 +136,7 @@ class _LoginState extends State<Login> {
           SizedBox(
             height: 50,
             child: ElevatedButton(
-              onPressed: _enviarFormulario,
+              onPressed: _enviarFormulario, //vou enviar o formulario para
               style: ElevatedButton.styleFrom(
                 backgroundColor: Colors.orange,
                 shape: RoundedRectangleBorder(
@@ -159,15 +147,6 @@ class _LoginState extends State<Login> {
             ),
           ),
 
-          const SizedBox(height: 15),
-
-          TextButton(
-            onPressed: telaRecuperacaoSenha,
-            child: const Text(
-              "Esqueci minha senha",
-              style: TextStyle(color: Colors.black),
-            ),
-          ),
         ],
       ),
     );

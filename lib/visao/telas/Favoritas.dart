@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:login/controle/CReceitas.dart';
+import 'package:login/controle/receitasController.dart';
 import 'package:login/modelo/classes/receita.dart';
 
 class TelaDois extends StatefulWidget {
@@ -18,12 +18,12 @@ class _TelaDoisState extends State<TelaDois> {
   @override
   void initState() {
     super.initState();
-    _carregarFavoritas();
+    _carregarFavoritas(); //para listar, quando abrir a tela as receitas favoritadas
   }
 
   Future<void> _carregarFavoritas() async {
     List<Receita> lista =
-    await ListaReceitaController.listarFavoritas();
+    await ListaReceitaController.listarFavoritas(); //pego do controller que pega do shared
 
     setState(() {
       _favoritas = lista;
@@ -31,7 +31,7 @@ class _TelaDoisState extends State<TelaDois> {
   }
 
   Future<void> _desfavoritar(int id) async {
-    await ListaReceitaController.favoritarReceita(id);
+    await ListaReceitaController.favoritarReceita(id); //a logica do favorita é a seguinte: colocar um valor diferente do preenchido. Se for true, vai virar false
     await _carregarFavoritas();
   }
 
@@ -136,7 +136,7 @@ class _TelaDoisState extends State<TelaDois> {
                   ),
                 ),
                 const SizedBox(height: 8),
-                ...receita.ingredientes.map(
+                ...receita.ingredientes.map( //é  mesma coisa de um for, porem uso o map, criado na classe receita
                       (e) => Text("• $e"),
                 ),
                 const SizedBox(height: 16),

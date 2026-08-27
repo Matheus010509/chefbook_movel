@@ -11,8 +11,7 @@ class LocalStorageService {
 
 
   static Future<void> salvarAutorizacao(Autorizacao auth) async {
-    final SharedPreferences prefs =
-    await SharedPreferences.getInstance();
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
 
     final String encodedData = json.encode(auth.toMap());
 
@@ -20,15 +19,13 @@ class LocalStorageService {
   }
 
   static Future<void> desgravarAutorizacao() async {
-    final SharedPreferences prefs =
-    await SharedPreferences.getInstance();
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
 
     await prefs.remove(AUTORIZACAO);
   }
 
   static Future<Autorizacao?> carregarAutorizacao() async {
-    final SharedPreferences prefs =
-    await SharedPreferences.getInstance();
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
 
     final String? authJson =
     prefs.getString(AUTORIZACAO);
@@ -46,24 +43,18 @@ class LocalStorageService {
 
   static Future<void> salvarReceitas(
       List<Receita> lista) async {
-    final SharedPreferences prefs =
-    await SharedPreferences.getInstance();
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
 
-    final String encodedData =
-    Receita.encode(lista);
+    final String encodedData = Receita.encode(lista);
 
-    await prefs.setString(
-      LISTA_RECEITAS,
-      encodedData,
-    );
+    await prefs.setString(LISTA_RECEITAS, encodedData,);
   }
 
   static Future<List<Receita>> carregarReceitas() async {
     final SharedPreferences prefs =
     await SharedPreferences.getInstance();
 
-    final String? receitasJson =
-    prefs.getString(LISTA_RECEITAS);
+    final String? receitasJson = prefs.getString(LISTA_RECEITAS);
 
     // Primeira execução:
     // ainda não existem receitas salvas.

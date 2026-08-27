@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:login/controle/CReceitas.dart';
+import 'package:login/controle/receitasController.dart';
 import 'package:login/modelo/classes/receita.dart';
 
 class ReceitasAlmoco extends StatefulWidget {
@@ -19,10 +19,7 @@ class _ReceitasAlmocoState extends State<ReceitasAlmoco> {
   }
 
   Future<void> _carregarDados() async {
-    final dados =
-    await ListaReceitaController.listarReceitas(
-      categoria: "almoco",
-    );
+    final dados = await ListaReceitaController.listarReceitas(categoria: "almoco",);
     setState(() {
       _receitas = dados;
     });
@@ -30,7 +27,7 @@ class _ReceitasAlmocoState extends State<ReceitasAlmoco> {
 
   Future<void> _favoritar(int id) async {
     await ListaReceitaController.favoritarReceita(id);
-    await _carregarDados();
+    await _carregarDados(); //vou favoritar a receita e logo em seguida exibir ela novamente na tela
   }
 
   @override
@@ -44,7 +41,7 @@ class _ReceitasAlmocoState extends State<ReceitasAlmoco> {
       body: SingleChildScrollView(
         padding: const EdgeInsets.all(16),
         child: Column(
-          children: [
+          children: [ //estou usando for pq no meu localstorage esta salvando cada igrediente em formato de lista. Ai da para organizar
             for (final receita in _receitas) ...[
               _receitaCompleta(receita),
               const SizedBox(height: 20),
@@ -55,7 +52,7 @@ class _ReceitasAlmocoState extends State<ReceitasAlmoco> {
     );
   }
 
-  Widget _receitaCompleta(Receita receita) {
+  Widget _receitaCompleta(Receita receita) { //aqui eu estou criando cada receita. Isso é como se fosse um card
     return Container(
       width: double.infinity,
       margin: const EdgeInsets.only(bottom: 15),
@@ -94,9 +91,9 @@ class _ReceitasAlmocoState extends State<ReceitasAlmoco> {
                   ),
                 ),
                 IconButton(
-                  onPressed: () => _favoritar(receita.id),
+                  onPressed: () => _favoritar(receita.id), //chama a funcao para favoritar a receita, que esta no meu receitasController
                   icon: Icon(
-                    receita.favorito ? Icons.favorite : Icons.favorite_border,
+                    receita.favorito ? Icons.favorite : Icons.favorite_border, //para trocar entre o coracao preenchido e vazio
                     color: Colors.red,
                   ),
                 ),
@@ -113,7 +110,7 @@ class _ReceitasAlmocoState extends State<ReceitasAlmoco> {
                   style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
                 ),
                 const SizedBox(height: 5),
-                for (var item in receita.ingredientes) Text("• $item"),
+                for (var item in receita.ingredientes) Text("• $item"), //um for para mostrar os dados da receita
                 const SizedBox(height: 12),
                 const Text(
                   "Modo de preparo:",

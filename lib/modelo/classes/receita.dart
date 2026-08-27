@@ -49,7 +49,5 @@ class Receita {
 
   // Converte uma String JSON para uma lista de objetos
   static List<Receita> decode(String receitasJson) =>
-      (json.decode(receitasJson) as List<dynamic>)
-          .map<Receita>((item) => Receita.fromMap(item))
-          .toList();
+      (json.decode(receitasJson) as List<dynamic>).map<Receita>((item) => Receita.fromMap(item)).toList();
 }

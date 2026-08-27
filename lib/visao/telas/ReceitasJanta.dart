@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:login/controle/CReceitas.dart';
+import 'package:login/controle/receitasController.dart';
 import 'package:login/modelo/classes/receita.dart';
 
 class ReceitasJanta extends StatefulWidget {

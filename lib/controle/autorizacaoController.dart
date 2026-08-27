@@ -9,6 +9,7 @@ class AutorizaController{
 
   static Future<void> gravaAutorizacao(String usuario, String token) async{
     Autorizacao auth = new Autorizacao(usuario: usuario, senha: '', token_autorizacao: token);
+
     //salvando receita na lista persistida
     await LocalStorageService.salvarAutorizacao(auth);
   }
@@ -25,7 +26,7 @@ class AutorizaController{
     //json.encode(auth.toMap());
 
     //simula o retorno da api
-    if(auth.usuario=='matheus@gmail' && auth.senha=='123456') {
+    if(auth.usuario=='matheus@gmail.com' && auth.senha=='123456') {
       Autorizacao authApiRetorno = Autorizacao(
           usuario: "matheus",
           senha: '',
