@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:login/visao/telas/ReceitasJanta.dart';
-import 'package:login/visao/telas/ReceitasAlmoco.dart';
-import 'package:login/visao/telas/ReceitasLanche.dart';
-import 'package:login/visao/telas/ReceitasSobremesa.dart';
+import 'package:login/modelo/classes/receita.dart';
+import 'package:login/modelo/LocalStorageService.dart';
+import 'package:login/visao/telas/ReceitasPorCategoria.dart';
 
 class TelaUm extends StatefulWidget {
   const TelaUm({super.key, required this.title});
@@ -10,67 +9,139 @@ class TelaUm extends StatefulWidget {
   final String title;
 
   @override
-  State<TelaUm> createState() =>
-      _TelaHomeState(); //eu dei o nome de telaum, e estou usando para chamar nas outras paginas
+  State<TelaUm> createState() => _TelaHomeState();
 }
 
 class _TelaHomeState extends State<TelaUm> {
-  //Ele pega o titula ChefBook da tela principal, que retornar um app bar
+  List<String> _categorias = [];
+
+  final Map<String, IconData> _iconesConhecidos = { //ja deixo pre-pronto pois no web eu cadastrei essas categorias para todos
+    'almoco': Icons.lunch_dining,
+    'janta': Icons.dinner_dining,
+    'lanche': Icons.fastfood,
+    'sobremesa': Icons.cake,
+  };
+
+  @override
+  void initState() {
+    super.initState();
+    _carregarCategorias();
+  }
+
+  Future<void> _carregarCategorias() async {
+    List<Receita> receitas = await LocalStorageService.carregarReceitas();
+
+    Set<String> nomesUnicos = receitas.map((r) => r.categoria).toSet(); //pois so pode existir um nome de categoria
+
+    if (!mounted) return;
+
+    setState(() {
+      _categorias = nomesUnicos.toList();
+    });
+  }
+
+  IconData _iconeDaCategoria(String categoria) {
+    return _iconesConhecidos[categoria.toLowerCase()] ?? Icons.restaurant_menu;
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Padding(
-        padding: const EdgeInsets.all(16),
-        child: GridView.count(
-          //essa é uma grid que eu coloquei, para ficar dois por dois
-          crossAxisCount: 2,
-          crossAxisSpacing: 15,
-          mainAxisSpacing: 15,
-          children: [
-            _categoria(context, "Almoço", Icons.lunch_dining, () {
-              //estou colocando um icone em todas as categorias, para ficar visualmente bonito
-              Navigator.push(
-                  context, //vou usar o push porque eu consigo voltar se quiser
-                  MaterialPageRoute(
-                      builder: (_) =>
-                          ReceitasAlmoco())); //eu estou mudando de pagina, chamando o builder da receitas daquelas categorias
-            }),
-            _categoria(context, "Lanche", Icons.fastfood, () {
-              Navigator.push(
-                  context, MaterialPageRoute(builder: (_) => ReceitasLanche()));
-            }),
-            _categoria(context, "Sobremesa", Icons.cake, () {
-              Navigator.push(context,
-                  MaterialPageRoute(builder: (_) => ReceitasSobremesa()));
-            }),
-            _categoria(context, "Janta", Icons.dinner_dining, () {
-              Navigator.push(
-                  context, MaterialPageRoute(builder: (_) => ReceitasJanta()));
-            }),
-          ],
+      backgroundColor: Colors.white,
+      appBar: AppBar(
+        backgroundColor: Colors.white,
+        elevation: 0,
+        title: const Text(
+          "Categorias",
+          style: TextStyle(
+            color: Colors.black,
+            fontWeight: FontWeight.bold,
+            fontSize: 24,
+          ),
         ),
+      ),
+      body: _categorias.isEmpty //caso nao tiver nenhuma categoria (nenhuma receita cadastrada na categoria) eu exibo essa mensagem
+          ? const Center(child: Text("Nenhuma categoria encontrada."))
+          : ListView.builder(
+        padding: const EdgeInsets.all(16),
+        itemCount: _categorias.length,
+        itemBuilder: (context, index) {
+          final categoria = _categorias[index];
+          return _categoriaCard(context, categoria);
+        },
       ),
     );
   }
 
-  Widget _categoria(
-      BuildContext context, String titulo, IconData icone, VoidCallback onTap) {
+  Widget _categoriaCard(BuildContext context, String titulo) { //aqui é o card bonitinho, laranja, para exibir as categorias
     return GestureDetector(
-      //esse detector serve para detectar um toque na tela. Toda vez que for tocado ele percebera
-      onTap: onTap,
+      onTap: () {
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (_) => ReceitasPorCategoria(categoria: titulo), //me redireciona para a categoria clicada
+          ),
+        );
+      },
       child: Container(
+        height: 190,
+        margin: const EdgeInsets.only(bottom: 20),
         decoration: BoxDecoration(
-          color: Colors.orange.shade100,
+          color: Colors.orange.shade400,
           borderRadius: BorderRadius.circular(20),
+          boxShadow: [
+            BoxShadow(
+              color: Colors.black.withOpacity(0.15),
+              blurRadius: 10,
+              offset: const Offset(0, 4),
+            ),
+          ],
         ),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
+        child: Stack(
+          fit: StackFit.expand,
           children: [
-            Icon(icone, size: 50, color: Colors.orange),
-            const SizedBox(height: 10),
-            Text(
-              titulo,
-              style: const TextStyle(fontWeight: FontWeight.bold),
+            Center(
+              child: Icon(
+                _iconeDaCategoria(titulo),
+                size: 70,
+                color: Colors.white.withOpacity(0.5),
+              ),
+            ),
+
+            // gradiente escuro
+            Container(
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(20),
+                gradient: LinearGradient(
+                  begin: Alignment.bottomCenter,
+                  end: Alignment.topCenter,
+                  colors: [
+                    Colors.black.withOpacity(0.5),
+                    Colors.black.withOpacity(0.0),
+                  ],
+                  stops: const [0.0, 0.7],
+                ),
+              ),
+            ),
+
+            // nome da categoria centralizado
+            Center(
+              child: Text(
+                titulo[0].toUpperCase() + titulo.substring(1),
+                textAlign: TextAlign.center,
+                style: const TextStyle(
+                  color: Colors.white,
+                  fontSize: 26,
+                  fontWeight: FontWeight.bold,
+                  shadows: [
+                    Shadow(
+                      color: Colors.black54,
+                      blurRadius: 6,
+                      offset: Offset(0, 2),
+                    ),
+                  ],
+                ),
+              ),
             ),
           ],
         ),

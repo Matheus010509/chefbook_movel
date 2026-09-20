@@ -1,5 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:login/controle/autorizacaoController.dart';
+import 'package:login/modelo/classes/autorizacao.dart';
+import 'package:login/modelo/LocalStorageService.dart';
+import 'package:login/visao/telas/Login.dart';
 
 class TelaTres extends StatefulWidget {
   const TelaTres({super.key, required this.title});
@@ -11,6 +15,36 @@ class TelaTres extends StatefulWidget {
 }
 
 class _TelaTresState extends State<TelaTres> {
+  Autorizacao? _usuario;
+
+  @override
+  void initState() {
+    super.initState();
+    _carregarUsuario();
+  }
+
+  Future<void> _carregarUsuario() async { //preparando as informacoes para exibi-las
+    Autorizacao? auth = await LocalStorageService.carregarAutorizacao();
+
+    if (!mounted) return;
+
+    setState(() {
+      _usuario = auth;
+    });
+  }
+
+  Future<void> _fazerLogout() async { //vou chamar a funcao la do meu autorizacaoController de logout
+    await AutorizaController.logout();
+
+    if (!mounted) return;
+
+    Navigator.pushAndRemoveUntil(
+      context,
+      MaterialPageRoute(builder: (_) => const Login(title: "ChefBook")),
+          (route) => false, // limpa toda a pilha de navegação
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     ScreenUtil.init(context, designSize: const Size(750, 1304));
@@ -37,7 +71,9 @@ class _TelaTresState extends State<TelaTres> {
           ),
         ),
       ),
-      body: Padding(
+      body: _usuario == null
+          ? const Center(child: CircularProgressIndicator())
+          : Padding(
         padding: const EdgeInsets.all(16.0),
         child: Column(
           children: [
@@ -58,18 +94,30 @@ class _TelaTresState extends State<TelaTres> {
 
                     const SizedBox(height: 20),
 
-                    // Nome
-                    _infoCard("Nome", "Matheus Nascimento"),
+                    // Nome (dinâmico, vem do usuário logado)
+                    _infoCard("Nome", _usuario!.usuario),
 
                     const SizedBox(height: 10),
 
-                    // Email
-                    _infoCard("Email", "matheusnascimento010520@gmail.com"),
+                    // Email (dinâmico, vem do usuário logado)
+                    _infoCard("Email", _usuario!.email),
 
-                    const SizedBox(height: 10),
+                    const SizedBox(height: 40),
 
-                    // Senha
-                    _infoCard("Senha", "********"),
+                    // Botão de logout
+                    SizedBox(
+                      width: double.infinity,
+                      child: ElevatedButton.icon(
+                        onPressed: _fazerLogout,
+                        icon: const Icon(Icons.logout),
+                        label: const Text("Sair"),
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: Colors.red,
+                          foregroundColor: Colors.white,
+                          padding: const EdgeInsets.symmetric(vertical: 14),
+                        ),
+                      ),
+                    ),
 
                     const SizedBox(height: 40),
                   ],

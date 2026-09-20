@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
+import 'package:login/controle/receitasController.dart';
 import 'package:login/visao/estilos/EstilosTexto.dart';
 import 'package:login/visao/telas/Principal.dart';
 import 'package:login/visao/util/WidgetsUteis.dart';
@@ -16,17 +17,42 @@ class _Splash2State extends State<Splash2> {
   @override
   void initState() {
     super.initState();
+    _prepararReceitas();
+  }
 
-    Future.delayed(const Duration(seconds: 3), () {
-      if (!mounted) return;
+  Future<void> _prepararReceitas() async {
+    // Busca as receitas na API e já grava no SharedPreferences
+    final resultado = await ReceitasController.buscarEAtualizarReceitas();
 
+    // Delay mínimo de splash (mesmo tempo que já existia: 3 segundos)
+    await Future.delayed(const Duration(seconds: 3));
+
+    if (!mounted) return;
+
+    if (resultado) {
       Navigator.pushReplacement(
         context,
         MaterialPageRoute(
           builder: (_) => const Principal(),
         ),
       );
-    });
+    } else {
+      // Falha ao buscar da API (sem internet, IP errado, token inválido, etc.)
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text('Não foi possível atualizar as receitas. Verifique sua conexão.'),
+        ),
+      );
+
+      // Mesmo com erro, segue pra Principal — ela vai exibir
+      // o que já estiver salvo localmente do SharedPreferences
+      Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(
+          builder: (_) => const Principal(),
+        ),
+      );
+    }
   }
 
   @override

@@ -1,49 +1,79 @@
 import 'dart:convert';
-
+import 'package:http/http.dart' as http;
 import 'package:login/modelo/classes/autorizacao.dart';
-import 'package:login/modelo/classes/receita.dart';
 import 'package:login/modelo/LocalStorageService.dart';
+import 'package:login/visao/util/constantes.dart';
 
+class AutorizaController {
 
-class AutorizaController{
-
-  static Future<void> gravaAutorizacao(String usuario, String token) async{
-    Autorizacao auth = new Autorizacao(usuario: usuario, senha: '', token_autorizacao: token);
-
-    //salvando receita na lista persistida
+  static Future<void> gravaAutorizacao(String usuario, String email, String token) async {
+    Autorizacao auth = Autorizacao(
+      usuario: usuario,
+      email: email,
+      senha: '',
+      token_autorizacao: token,
+    );
     await LocalStorageService.salvarAutorizacao(auth);
   }
-  static Future<void> desgravaAutorizacao() async{
+
+  static Future<void> desgravaAutorizacao() async {
     await LocalStorageService.desgravarAutorizacao();
   }
 
-  /**
-   * função fake de autenticação na api de forma positiva
-   */
-  static Future <bool> verificaAutorizacaoOnline(Autorizacao auth) async{
-    //faço a chamada à API enviando o json do meu objeto de autorizacao
-    //envio este json para a API para obter o token
-    //json.encode(auth.toMap());
-
-    //simula o retorno da api
-    if(auth.usuario=='matheus@gmail.com' && auth.senha=='123456') {
-      Autorizacao authApiRetorno = Autorizacao(
-          usuario: "matheus",
-          senha: '',
-          token_autorizacao: "çalskdfsoiu23j́bdçvocuiyvhkjqerb-iudfhnsbdkljqghoi"
+  static Future<bool> verificaAutorizacaoOnline(Autorizacao auth) async {
+    try {
+      final response = await http.post(
+        Uri.parse('${Constantes.baseUrl}/login'),
+        headers: {
+          'Accept': 'application/json',
+          'Content-Type': 'application/json',
+        },
+        body: jsonEncode({
+          'email': auth.usuario,
+          'password': auth.senha,
+        }),
       );
-      gravaAutorizacao(
-          authApiRetorno.usuario, authApiRetorno.token_autorizacao);
-      return true;
-    }else{
+
+      if (response.statusCode == 200) {
+        final dados = jsonDecode(response.body);
+        final token = dados['token'];
+        final nomeUsuario = dados['user']['name'];
+        final emailUsuario = dados['user']['email'];
+
+        await gravaAutorizacao(nomeUsuario, emailUsuario, token);
+        return true;
+      }
+
+      return false;
+    } catch (e) {
       return false;
     }
   }
 
-  static Future <bool> verificaAutorizacaoOffline() async{
-    Autorizacao? auth =  await LocalStorageService.carregarAutorizacao();
-    if(auth==null) return false;
+  static Future<bool> verificaAutorizacaoOffline() async {
+    Autorizacao? auth = await LocalStorageService.carregarAutorizacao();
+    if (auth == null) return false;
     return true;
   }
 
+  static Future<void> logout() async {
+    try {
+      Autorizacao? auth = await LocalStorageService.carregarAutorizacao();
+
+      if (auth != null) {
+        await http.post(
+          Uri.parse('${Constantes.baseUrl}/logout'),
+          headers: {
+            'Accept': 'application/json',
+            'Authorization': 'Bearer ${auth.token_autorizacao}',
+          },
+        );
+      }
+    } catch (e) {
+      // falha ao notificar a API, mas segue limpando os dados locais mesmo assim
+    }
+
+    await desgravaAutorizacao();
+    await LocalStorageService.limparReceitas(); // <- limpa as receitas do usuário anterior
+  }
 }

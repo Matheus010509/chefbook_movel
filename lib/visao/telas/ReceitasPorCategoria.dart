@@ -1,45 +1,43 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:login/controle/receitasController.dart';
 import 'package:login/modelo/classes/receita.dart';
 import 'package:login/visao/telas/ReceitaDetalhe.dart';
 
-class TelaDois extends StatefulWidget {
-  const TelaDois({super.key, required this.title});
+class ReceitasPorCategoria extends StatefulWidget {
+  final String categoria;
 
-  final String title;
+  const ReceitasPorCategoria({super.key, required this.categoria});
 
   @override
-  State<TelaDois> createState() => _TelaDoisState();
+  State<ReceitasPorCategoria> createState() => _ReceitasPorCategoriaState();
 }
 
-class _TelaDoisState extends State<TelaDois> {
-  List<Receita> _favoritas = [];
+class _ReceitasPorCategoriaState extends State<ReceitasPorCategoria> {
+  List<Receita> _receitas = [];
 
   @override
   void initState() {
     super.initState();
-    _carregarFavoritas(); //para listar, quando abrir a tela as receitas favoritadas
+    _carregarReceitas();
   }
 
-  Future<void> _carregarFavoritas() async {
-    List<Receita> lista =
-    await ListaReceitaController.listarFavoritas(); //pego do controller que pega do shared
+  Future<void> _carregarReceitas() async {
+    List<Receita> lista = await ListaReceitaController.listarPorCategoria(widget.categoria);
+
+    if (!mounted) return;
 
     setState(() {
-      _favoritas = lista;
+      _receitas = lista;
     });
   }
 
-  Future<void> _desfavoritar(int id) async {
-    await ListaReceitaController.favoritarReceita(id); //a logica do favorita é a seguinte: colocar um valor diferente do preenchido. Se for true, vai virar false
-    await _carregarFavoritas();
+  Future<void> _alternarFavorito(int id) async {
+    await ListaReceitaController.favoritarReceita(id);
+    await _carregarReceitas();
   }
 
   @override
   Widget build(BuildContext context) {
-    ScreenUtil.init(context, designSize: const Size(750, 1304));
-
     return Scaffold(
       appBar: AppBar(
         centerTitle: true,
@@ -51,33 +49,33 @@ class _TelaDoisState extends State<TelaDois> {
             color: Colors.amber,
             borderRadius: BorderRadius.circular(12),
           ),
-          child: const Text(
-            'Receitas Favoritas',
-            style: TextStyle(
+          child: Text(
+            widget.categoria,
+            style: const TextStyle(
               color: Colors.black,
               fontWeight: FontWeight.bold,
             ),
           ),
         ),
       ),
-      body: _favoritas.isEmpty
+      body: _receitas.isEmpty
           ? const Center(
         child: Text(
-          'Nenhuma receita favoritada.',
+          'Nenhuma receita nessa categoria ainda.',
           style: TextStyle(fontSize: 18),
         ),
       )
           : ListView.builder(
         padding: const EdgeInsets.all(16),
-        itemCount: _favoritas.length,
+        itemCount: _receitas.length,
         itemBuilder: (context, index) {
-          return _cardPrevia(_favoritas[index]);
+          return _cardPrevia(_receitas[index]);
         },
       ),
     );
   }
 
-  Widget _cardPrevia(Receita receita) { //crio esse card para lista previamente a receita, como imagem e nome
+  Widget _cardPrevia(Receita receita) {
     return GestureDetector(
       onTap: () {
         Navigator.push(
@@ -140,7 +138,7 @@ class _TelaDoisState extends State<TelaDois> {
                 receita.favorito ? Icons.favorite : Icons.favorite_border,
                 color: Colors.red,
               ),
-              onPressed: () => _desfavoritar(receita.id), //acao de desfavoritar, que é basicamente colocar um valor false no bool
+              onPressed: () => _alternarFavorito(receita.id),
             ),
           ],
         ),

@@ -38,6 +38,7 @@ dependencies:
   flutter_screenutil: ^5.9.3
   intl: ^0.20.2
   shared_preferences: ^2.3.2
+  http: ^1.2.0
   #flutter_facebook_login:
   #  git: https://github.com/lequanghiep74/flutter_facebook_login
   #firebase_auth: ^5.5.1
