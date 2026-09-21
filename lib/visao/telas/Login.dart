@@ -246,12 +246,16 @@ class _LoginState extends State<Login> {
               Container(
                 width: 84,
                 height: 84,
+                padding: const EdgeInsets.all(16),
                 decoration: BoxDecoration(
                   color: Colors.orange.shade50,
                   shape: BoxShape.circle,
                   border: Border.all(color: Colors.orange.shade300, width: 2),
                 ),
-                child: Icon(Icons.local_fire_department, size: 42, color: Colors.orange.shade600),
+                child: Image.asset(
+                  'assets/screenshots/chef_hat.png',
+                  fit: BoxFit.contain,
+                ),
               ),
 
               const SizedBox(height: 16),

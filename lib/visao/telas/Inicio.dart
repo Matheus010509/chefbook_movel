@@ -16,10 +16,10 @@ class _TelaHomeState extends State<TelaUm> {
   List<String> _categorias = [];
 
   final Map<String, IconData> _iconesConhecidos = { //ja deixo pre-pronto pois no web eu cadastrei essas categorias para todos
-    'almoco': Icons.lunch_dining,
-    'janta': Icons.dinner_dining,
-    'lanche': Icons.fastfood,
-    'sobremesa': Icons.cake,
+    'Almoço': Icons.lunch_dining,
+    'Janta': Icons.dinner_dining,
+    'Lanche': Icons.fastfood,
+    'Sobremesa': Icons.cake,
   };
 
   @override

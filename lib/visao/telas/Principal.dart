@@ -35,7 +35,7 @@ class _PrincipalState extends State<Principal> {
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
           const Icon(Icons.restaurant, color: Colors.white),
-          WidgetsUteis().espacoHorizontal5,
+          WidgetsUteis().espacoHorizontal15,
           const Text(
             "ChefBook",
             style: TextStyle(

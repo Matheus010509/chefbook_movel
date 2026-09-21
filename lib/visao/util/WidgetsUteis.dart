@@ -3,6 +3,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:login/visao/estilos/EstilosTexto.dart';
 import 'package:login/visao/util/CustomIcons.dart';
 import 'package:login/visao/util/SocialIcons.dart';
+import 'dart:math' as math;
 
 class WidgetsUteis {
 
@@ -147,42 +148,104 @@ class WidgetsUteis {
   }
 
 
-  // LISTA
-
-
-
-
   // BARRA CIRCULAR DE PROGRESSO
 
-  Widget barraCircularProgresso() {
-    return const SizedBox(
-      width: 150,
-      height: 150,
-      child: Stack(
-        alignment: Alignment.center,
-        children: [
-          SizedBox(
-            width: 100,
-            height: 100,
-            child: CircularProgressIndicator(
-              strokeWidth: 8.0,
-              valueColor: AlwaysStoppedAnimation<Color>(
-                Colors.white70,
-              ),
-            ),
-          ),
-          SizedBox(
-            width: 150,
-            height: 150,
-            child: CircularProgressIndicator(
-              strokeWidth: 8.0,
-              valueColor: AlwaysStoppedAnimation<Color>(
-                Colors.white,
-              ),
-            ),
-          ),
-        ],
+
+  Widget barraCircularProgresso({double tamanho = 56}) {
+    return SpinnerCapsulas(tamanho: tamanho);
+  }
+
+
+}// Indicador de carregamento com cápsulas em círculo
+class SpinnerCapsulas extends StatefulWidget {
+  final double tamanho;
+  final Color cor;
+
+  const SpinnerCapsulas({
+    super.key,
+    this.tamanho = 110,
+    this.cor = Colors.white,
+  });
+
+  @override
+  State<SpinnerCapsulas> createState() => _SpinnerCapsulasState();
+}
+
+class _SpinnerCapsulasState extends State<SpinnerCapsulas>
+    with SingleTickerProviderStateMixin {
+  late final AnimationController _controller;
+
+  @override
+  void initState() {
+    super.initState();
+    _controller = AnimationController(
+      vsync: this,
+      duration: const Duration(milliseconds: 1200),
+    )..repeat();
+  }
+
+  @override
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return SizedBox(
+      width: widget.tamanho,
+      height: widget.tamanho,
+      child: CustomPaint(
+        painter: _CapsulasPainter(
+          animacao: _controller,
+          cor: widget.cor,
+        ),
       ),
     );
   }
+}
+
+class _CapsulasPainter extends CustomPainter {
+  final Animation<double> animacao;
+  final Color cor;
+  static const int quantidade = 8;
+
+  _CapsulasPainter({required this.animacao, required this.cor})
+      : super(repaint: animacao);
+
+  @override
+  void paint(Canvas canvas, Size size) {
+    final double raio = size.shortestSide / 2;
+    final Offset centro = Offset(size.width / 2, size.height / 2);
+
+    final double espessura = raio * 0.16;
+    final double raioInterno = raio * 0.50;
+    final double raioExterno = raio - espessura / 2;
+
+    final Paint paint = Paint()
+      ..style = PaintingStyle.stroke
+      ..strokeCap = StrokeCap.round
+      ..strokeWidth = espessura;
+
+    final double progresso = animacao.value * quantidade;
+
+    for (int i = 0; i < quantidade; i++) {
+      // Quanto mais atrás do brilho, mais apagada a linha
+      final double atraso = (progresso - i) % quantidade;
+      final double opacidade = 1.0 - (atraso / quantidade) * 0.85;
+
+      final double angulo = i * 2 * math.pi / quantidade - math.pi / 2;
+      final Offset direcao = Offset(math.cos(angulo), math.sin(angulo));
+
+      canvas.drawLine(
+        centro + direcao * raioInterno,
+        centro + direcao * raioExterno,
+        paint..color = cor.withOpacity(opacidade),
+      );
+    }
+  }
+
+  @override
+  bool shouldRepaint(covariant _CapsulasPainter oldDelegate) =>
+      oldDelegate.cor != cor;
 }
