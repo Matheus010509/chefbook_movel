@@ -13,13 +13,11 @@ class LocalStorageService {
     final SharedPreferences prefs = await SharedPreferences.getInstance();
 
     final String encodedData = json.encode(auth.toMap());
-
     await prefs.setString(AUTORIZACAO, encodedData);
   }
 
   static Future<void> desgravarAutorizacao() async {
     final SharedPreferences prefs = await SharedPreferences.getInstance();
-
     await prefs.remove(AUTORIZACAO);
   }
 
@@ -42,9 +40,7 @@ class LocalStorageService {
   static Future<void> salvarReceitas(
       List<Receita> lista) async {
     final SharedPreferences prefs = await SharedPreferences.getInstance();
-
     final String encodedData = Receita.encode(lista);
-
     await prefs.setString(LISTA_RECEITAS, encodedData,);
   }
 
