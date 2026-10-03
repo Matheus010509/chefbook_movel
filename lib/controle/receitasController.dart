@@ -13,13 +13,9 @@ class ReceitasController {
       Autorizacao? auth = await LocalStorageService.carregarAutorizacao();
       if (auth == null) return false;
 
-      // Carrega o que já está salvo localmente (com os favoritos atuais)
-      List<Receita> receitasAntigas = await LocalStorageService.carregarReceitas();
-
-      //  Monta um mapa id -> favorito, pra consulta rápida
-      Map<int, bool> favoritosSalvos = {
-        for (var r in receitasAntigas) r.id: r.favorito
-      };
+      // Favoritos salvos por usuário (sobrevivem ao logout)
+      final Set<int> favoritosIds =
+      await LocalStorageService.carregarFavoritos(auth.email);
 
       final response = await http.get(
         Uri.parse('${Constantes.baseUrl}/receitas-por-categoria'),
@@ -40,11 +36,10 @@ class ReceitasController {
           for (var receitaJson in receitasJson) {
             int id = receitaJson['id'];
 
-            // Se essa receita já existia localmente, mantém o favorito antigo.
-            //    Se for uma receita nova (nunca vista antes), usa o valor da API.
-            bool favoritoFinal = favoritosSalvos.containsKey(id)
-                ? favoritosSalvos[id]!
-                : (receitaJson['favorito'] == 1 || receitaJson['favorito'] == true);
+            // É favorita se estiver no conjunto local do usuário
+            // ou se a API já a marcar como favorita.
+            bool favoritoFinal = favoritosIds.contains(id) ||
+                (receitaJson['favorito'] == 1 || receitaJson['favorito'] == true);
 
             todasReceitas.add(Receita(
               id: id,
@@ -88,14 +83,16 @@ class ListaReceitaController {
   }
 
   static Future<void> favoritarReceita(int id) async {
+    final auth = await LocalStorageService.carregarAutorizacao();
+    if (auth == null) return;
+
     List<Receita> todas = await LocalStorageService.carregarReceitas();
+    for (var r in todas) {
+      if (r.id == id) r.favorito = !r.favorito;
+    }
+    await LocalStorageService.salvarReceitas(todas);
 
-    List<Receita> atualizada = todas.map((r) {
-      if (r.id == id) {r.favorito = !r.favorito; // inverte o valor: true vira false, false vira true
-      }
-      return r;
-    }).toList();
-
-    await LocalStorageService.salvarReceitas(atualizada);
+    final ids = todas.where((r) => r.favorito).map((r) => r.id).toSet();
+    await LocalStorageService.salvarFavoritos(auth.email, ids);
   }
 }

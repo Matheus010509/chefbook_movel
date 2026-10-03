@@ -23,6 +23,7 @@ class _ReceitasPorCategoriaState extends State<ReceitasPorCategoria> {
 
   Future<void> _carregarReceitas() async {
     List<Receita> lista = await ListaReceitaController.listarPorCategoria(widget.categoria);
+    //listo apenas as categorias que possuem pelo menos uma receita
 
     if (!mounted) return;
 
@@ -39,9 +40,11 @@ class _ReceitasPorCategoriaState extends State<ReceitasPorCategoria> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Colors.white, //  mesma cor do AppBar
       appBar: AppBar(
         centerTitle: true,
         backgroundColor: Colors.white,
+        surfaceTintColor: Colors.transparent,
         elevation: 0,
         title: Container(
           padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
@@ -78,7 +81,7 @@ class _ReceitasPorCategoriaState extends State<ReceitasPorCategoria> {
   Widget _cardPrevia(Receita receita) {
     return GestureDetector(
       onTap: () {
-        Navigator.push(
+        Navigator.push( //empilho a pagina de detalhe, pois ai depois consigo voltar
           context,
           MaterialPageRoute(builder: (_) => ReceitaDetalhe(receita: receita)),
         );
@@ -113,7 +116,7 @@ class _ReceitasPorCategoriaState extends State<ReceitasPorCategoria> {
                   width: 90,
                   height: 90,
                   color: Colors.orange.shade100,
-                  child: const Icon(Icons.image_not_supported,
+                  child: const Icon(Icons.image_not_supported, //caso a imagem de errado, mostro esse icone
                       color: Colors.orange),
                 ),
               )
@@ -138,7 +141,7 @@ class _ReceitasPorCategoriaState extends State<ReceitasPorCategoria> {
                 receita.favorito ? Icons.favorite : Icons.favorite_border,
                 color: Colors.red,
               ),
-              onPressed: () => _alternarFavorito(receita.id),
+              onPressed: () => _alternarFavorito(receita.id), //coloca um valor oposto do preenchido
             ),
           ],
         ),

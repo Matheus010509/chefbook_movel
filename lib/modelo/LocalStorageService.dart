@@ -4,6 +4,7 @@ import 'package:login/modelo/classes/autorizacao.dart';
 import 'dart:convert';
 
 class LocalStorageService {
+  static String _chaveFavoritos(String email) => 'favoritos_$email'; //para eu associar as favoritas
   static const String LISTA_RECEITAS = 'lista_receitas';
   static const String AUTORIZACAO = 'autorizacao';
 
@@ -17,7 +18,7 @@ class LocalStorageService {
   }
 
   static Future<void> desgravarAutorizacao() async {
-    final SharedPreferences prefs = await SharedPreferences.getInstance();
+    final prefs = await SharedPreferences.getInstance();
     await prefs.remove(AUTORIZACAO);
   }
 
@@ -63,5 +64,20 @@ class LocalStorageService {
 
     // Se já existem receitas salvas, carrega diretamente do SharedPreferences.
     return Receita.decode(receitasJson);
+  }
+
+
+  static Future<void> salvarFavoritos(String email, Set<int> ids) async {
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setStringList(
+      _chaveFavoritos(email), //utilizo o email para salvar as receitas para cada usuario
+      ids.map((e) => e.toString()).toList(),
+    );
+  }
+
+  static Future<Set<int>> carregarFavoritos(String email) async {
+    final prefs = await SharedPreferences.getInstance();
+    final lista = prefs.getStringList(_chaveFavoritos(email)) ?? []; //verifico se naquele email tem alguma favorita vinculada
+    return lista.map(int.parse).toSet();
   }
 }

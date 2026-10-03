@@ -41,9 +41,11 @@ class _TelaDoisState extends State<TelaDois> {
     ScreenUtil.init(context, designSize: const Size(750, 1304));
 
     return Scaffold(
+      backgroundColor: Colors.white, //  mesma cor do AppBar
       appBar: AppBar(
         centerTitle: true,
         backgroundColor: Colors.white,
+        surfaceTintColor: Colors.transparent,
         elevation: 0,
         title: Container(
           padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
@@ -82,7 +84,7 @@ class _TelaDoisState extends State<TelaDois> {
       onTap: () {
         Navigator.push(
           context,
-          MaterialPageRoute(builder: (_) => ReceitaDetalhe(receita: receita)),
+          MaterialPageRoute(builder: (_) => ReceitaDetalhe(receita: receita)), //chamo essa outra pagina para exibir os dados
         );
       },
       child: Container(

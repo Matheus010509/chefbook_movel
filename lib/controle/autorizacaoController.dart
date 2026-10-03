@@ -65,15 +65,15 @@ class AutorizaController {
           Uri.parse('${Constantes.baseUrl}/logout'),
           headers: {
             'Accept': 'application/json',
-            'Authorization': 'Bearer ${auth.token_autorizacao}',
+            'Authorization': 'Bearer ${auth.token_autorizacao}', //token de autorizacao do laravel
           },
         );
       }
     } catch (e) {
-      // falha ao notificar a API, mas segue limpando os dados locais mesmo assim
+      // falha ao notificar a API, mas segue limpando a sessão local mesmo assim
     }
 
     await desgravaAutorizacao();
-    await LocalStorageService.limparReceitas(); // <- limpa as receitas do usuário anterior
+    await LocalStorageService.limparReceitas(); // limpa as receitas do usuário anterior, para sempre atualizar de usuario para usuario
   }
 }
