@@ -18,6 +18,7 @@ class MyApp extends StatelessWidget {
 
 
   //construtor padrão da aplicação
+
   const MyApp({super.key});
 
   //método responsável por construir uma interface não alterável, neste caso a moldura em branco do app
