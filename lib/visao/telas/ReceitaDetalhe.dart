@@ -20,12 +20,25 @@ class _ReceitaDetalheState extends State<ReceitaDetalhe> {
     _receita = widget.receita;
   }
 
-  Future<void> _alternarFavorito() async { //para favoritar e desvaritar, colocando valores opostos
+  Future<void> _alternarFavorito() async {
     await ListaReceitaController.favoritarReceita(_receita.id);
 
     setState(() {
       _receita.favorito = !_receita.favorito;
     });
+  }
+
+  // Reagrupa o preparo e separa por ponto final (um passo por frase)
+  List<String> _passosPreparo() {
+    final textoCompleto = _receita.preparo
+        .join(', ') // desfaz a separação errada por vírgula
+        .replaceAll(RegExp(r'\s+'), ' '); // normaliza espaços duplicados
+
+    return textoCompleto
+        .split(RegExp(r'(?<=[.!?])\s+')) // separa após . ! ou ? seguidos de espaço
+        .map((p) => p.trim())
+        .where((p) => p.isNotEmpty)
+        .toList();
   }
 
   @override
@@ -45,7 +58,7 @@ class _ReceitaDetalheState extends State<ReceitaDetalhe> {
                   ? Container(
                 color: Colors.black,
                 child: Image.network(
-                  _receita.imagemUrl!, //pego essa imagem que foi definida no model e salva no shared
+                  _receita.imagemUrl!,
                   fit: BoxFit.contain,
                   errorBuilder: (context, error, stackTrace) => Container(
                     color: Colors.orange.shade100,
@@ -57,7 +70,8 @@ class _ReceitaDetalheState extends State<ReceitaDetalhe> {
                     return Container(
                       color: Colors.black,
                       child: const Center(
-                        child: CircularProgressIndicator(color: Colors.orange),
+                        child: CircularProgressIndicator(
+                            color: Colors.orange),
                       ),
                     );
                   },
@@ -65,7 +79,8 @@ class _ReceitaDetalheState extends State<ReceitaDetalhe> {
               )
                   : Container(
                 color: Colors.orange.shade100,
-                child: const Icon(Icons.restaurant, size: 70, color: Colors.orange),
+                child: const Icon(Icons.restaurant,
+                    size: 70, color: Colors.orange),
               ),
             ),
           ),
@@ -77,14 +92,14 @@ class _ReceitaDetalheState extends State<ReceitaDetalhe> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       Expanded(
                         child: Text(
                           _receita.nome,
-                          style: const TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+                          style: const TextStyle(
+                              fontSize: 24, fontWeight: FontWeight.bold),
                         ),
                       ),
                       GestureDetector(
@@ -96,7 +111,9 @@ class _ReceitaDetalheState extends State<ReceitaDetalhe> {
                             shape: BoxShape.circle,
                           ),
                           child: Icon(
-                            _receita.favorito ? Icons.favorite : Icons.favorite_border,
+                            _receita.favorito
+                                ? Icons.favorite
+                                : Icons.favorite_border,
                             color: Colors.red,
                             size: 26,
                           ),
@@ -109,13 +126,15 @@ class _ReceitaDetalheState extends State<ReceitaDetalhe> {
 
                   // Chip da categoria
                   Container(
-                    padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+                    padding:
+                    const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
                     decoration: BoxDecoration(
                       color: Colors.orange.shade100,
                       borderRadius: BorderRadius.circular(20),
                     ),
                     child: Text(
-                      _receita.categoria[0].toUpperCase() + _receita.categoria.substring(1),
+                      _receita.categoria[0].toUpperCase() +
+                          _receita.categoria.substring(1),
                       style: TextStyle(
                         color: Colors.orange.shade800,
                         fontWeight: FontWeight.bold,
@@ -135,11 +154,11 @@ class _ReceitaDetalheState extends State<ReceitaDetalhe> {
 
                   const SizedBox(height: 20),
 
-                  // Card de modo de preparo
+                  // Card de modo de preparo (agora separado por ponto final)
                   _secaoCard(
                     titulo: "Modo de preparo",
                     icone: Icons.soup_kitchen_outlined,
-                    itens: _receita.preparo,
+                    itens: _passosPreparo(),
                     numerado: true,
                   ),
 
@@ -154,11 +173,13 @@ class _ReceitaDetalheState extends State<ReceitaDetalhe> {
                       icon: const Icon(Icons.arrow_back),
                       label: const Text(
                         "Voltar",
-                        style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                        style: TextStyle(
+                            fontSize: 16, fontWeight: FontWeight.bold),
                       ),
                       style: OutlinedButton.styleFrom(
                         foregroundColor: Colors.orange.shade700,
-                        side: BorderSide(color: Colors.orange.shade400, width: 1.5),
+                        side: BorderSide(
+                            color: Colors.orange.shade400, width: 1.5),
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(14),
                         ),
@@ -205,7 +226,8 @@ class _ReceitaDetalheState extends State<ReceitaDetalhe> {
               const SizedBox(width: 8),
               Text(
                 titulo,
-                style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 18),
+                style:
+                const TextStyle(fontWeight: FontWeight.bold, fontSize: 18),
               ),
             ],
           ),
